@@ -1,0 +1,20 @@
+--- jfsutils-1.1.15.orig/libfs/log_work.c
++++ jfsutils-1.1.15/libfs/log_work.c
+@@ -2406,6 +2406,7 @@
+ 	int32_t xlen, xlength;
+ 	int16_t nword;
+ 	int8_t upd_possible = 0;
++	struct dinode dip_local; /* Local copy of dinode data for alignment purposes */
+ 
+ 	if (ld->length <= 0)
+ 		return (0);
+@@ -2708,7 +2709,8 @@
+ 			 */
+ 
+ 			if (ino_rem == 0) {	/* inode base segment  */
+-				dip = (struct dinode *) data;
++			  	memcpy(&dip_local, data, size_dinode);
++				dip = &dip_local;
+ 				if (ln == 1) {
+ 					/* ibase only */
+ 					if (db->db_ibase & mask_8)
